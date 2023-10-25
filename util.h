@@ -5,12 +5,6 @@
 
 namespace util{
 
-	// 过滤字符
-	void filterQString(QString& name);
-
-	// 随机字符串
-	QString getRandomString(int length);
-
 	/*******文件操作**************/
 	// 获取路径下所有文件夹名称
 	QStringList findFolder(const QString& path);
@@ -41,6 +35,8 @@ namespace util{
 
 	// 打开文件夹，并选中
 	void selectDirPath(const QString& path);
+	
+	/*******文件操作 end**************/
 
 	// 获取时间戳到秒
 	QString getTimeStamp();
@@ -54,12 +50,17 @@ namespace util{
 	// 秒转分秒
 	QString FormatMMSS(qint32 total);
 
-	// uuid
-	QString createUUid();
-
 	//md5加密
 	QString GetMd5(const QString& value);
+	
+	// 过滤字符
+	void filterQString(QString& name);
 
-	// code转换
-	QString formatMsg(const QString& code);
+	// 随机字符串
+	QString getRandomString(int length);
+	
+	// uuid
+	QString createUUid();
+	
+	QString getHostIpAddress();
 }

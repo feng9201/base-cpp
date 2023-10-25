@@ -8,7 +8,6 @@
 #include <tchar.h>
 #include <shlwapi.h>
 #include <string.h>
-
 #pragma comment(lib, "version.lib")
 #endif
 
@@ -18,6 +17,9 @@
 #include <QDateTime>
 #include <QProcess>
 #include <QCryptographicHash>
+#include <QHostAddress>
+#include <QHostInfo>
+#include <QNetworkInterface>
 
 //int horizontalDPI = logicalDpiX();
 //double dpi = QApplication::primaryScreen()->logicalDotsPerInch();
@@ -28,47 +30,7 @@
 #define GB (1024*1024*1024)
 
 namespace util {
-
-	void filterQString(QString& name) {
-		//windows不允许的字符过滤
-		name.replace("/", u8"／");
-		name.replace("\\", u8"＼");
-		name.replace(":", u8"：");
-		name.replace("*", u8"﹡");
-		name.replace("?", u8"？");
-		name.replace("\"", u8"“");
-		name.replace("<", u8"‹");
-		name.replace(">", u8"›");
-		name.replace("|", u8"｜");
-		//转义字符过滤
-		name.replace("\n", "");
-		name.replace("\r", "");
-		name.replace("\t", "");
-		//过滤前后空格
-		name = name.simplified();
-	}
-
-	QString getRandomString(int length)
-	{
-		qsrand(QDateTime::currentMSecsSinceEpoch());
-
-		const char ch[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-		int size = sizeof(ch);
-
-		char* str = new char[length + 1];
-		memset(str,0, length + 1);
-
-		int num = 0;
-		for (int i = 0; i < length; ++i)
-		{
-			num = rand() % (size - 1);
-			str[i] = ch[num];
-		}
-
-		QString res(str);
-		return res;
-	}
-
+	
 	QStringList findFolder(const QString& path)
 	{
 		QDir dir(path);
@@ -258,22 +220,79 @@ namespace util {
 		md5.append(bb.toHex());
 		return md5;
 	}
+	
+	void filterQString(QString& name) {
+		//windows不允许的字符过滤
+		name.replace("/", u8"／");
+		name.replace("\\", u8"＼");
+		name.replace(":", u8"：");
+		name.replace("*", u8"﹡");
+		name.replace("?", u8"？");
+		name.replace("\"", u8"“");
+		name.replace("<", u8"‹");
+		name.replace(">", u8"›");
+		name.replace("|", u8"｜");
+		//转义字符过滤
+		name.replace("\n", "");
+		name.replace("\r", "");
+		name.replace("\t", "");
+		//过滤前后空格
+		name = name.simplified();
+	}
 
-	QString formatMsg(const QString& code)
+	QString getRandomString(int length)
 	{
-		QString msg;
-		if (code == "-2") {
-			msg = "无权限访问";
+		qsrand(QDateTime::currentMSecsSinceEpoch());
+
+		const char ch[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+		int size = sizeof(ch);
+
+		char* str = new char[length + 1];
+		memset(str,0, length + 1);
+
+		int num = 0;
+		for (int i = 0; i < length; ++i)
+		{
+			num = rand() % (size - 1);
+			str[i] = ch[num];
 		}
-		else if (code == "99990001") {
-			msg = "无权限处理数据";
+
+		QString res(str);
+		return res;
+	}
+	
+	QString getHostIpAddress()
+	{
+		QString strIpAddress;
+		QString localHostName = QHostInfo::localHostName();
+		//获取IP地址
+		QHostInfo info = QHostInfo::fromName(localHostName);
+		QList<QHostAddress> host_list = info.addresses();
+		foreach(QHostAddress address, host_list) {
+			if (address != QHostAddress::LocalHost &&
+				address.toIPv4Address() && address.protocol() == QAbstractSocket::IPv4Protocol) {
+				strIpAddress = address.toString();
+				break;
+			}
 		}
-		else if (code == "10001") {
-			msg = "数据以处理";
+
+		if (strIpAddress.isEmpty()) {
+			QList<QHostAddress> ipAddressesList = QNetworkInterface::allAddresses();
+			foreach(QHostAddress address, ipAddressesList)
+			{
+				if (address.protocol() == QAbstractSocket::IPv4Protocol && address != QHostAddress(QHostAddress::LocalHost))
+				{
+					strIpAddress = address.toString();
+					break;
+				}
+			}
 		}
-		else if (code == "10002") {
-			msg = "数据不存在";
+
+		// 如果没有找到，则以本地IP地址为IP
+		if (strIpAddress.isEmpty()) {
+			strIpAddress = QHostAddress(QHostAddress::LocalHost).toString();
 		}
-		return msg;
+
+		return strIpAddress;
 	}
 }
