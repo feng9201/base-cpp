@@ -1,0 +1,26 @@
+封装的一些基础类，方便使用。
+
+(不依赖QT)
+一：download文件夹
+    1.封装的多线程下载，支持断点续传，c++11基础实现，无依赖三方库 httplib 
+      
+二：threads文件夹
+   1.ThreadPool.h      c++线程池，可配合单例模板Singleton.h使用
+   2.ThreadTimer.h     c++定时器(基于单线程)，可开启多个定时器
+   3.threadEnhance类   封装c++11 Thread，使用方法类似QT下继承QThread, 实现Run
+   
+三：单例模板
+	Singleton.h
+	
+(依赖QT)
+一：异常捕获
+	contextHander.h    minidmp
+	
+二：ui文件夹
+	1.FrameLessWidget		   无边框基础类，可设置拖动，改变大小，双击事件等
+    2.GlobalHookKeyboard       捕获全局鼠标、键盘事件
+	3.BubbleMsg				   消息toast，展示2.5s自动隐藏
+	4.CalendarWidget		   日历控件
+	
+三：sqlite3
+    封装sqlite简单使用
