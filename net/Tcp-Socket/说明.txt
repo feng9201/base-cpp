@@ -1,0 +1,15 @@
+
+基于三方开源库HPSocket
+
+1.HpTcpClient客户端封装
+2.HpTcpServer服务端(tcp)封装
+
+源码地址：
+https://gitcode.com/mirrors/ldcsaa/hp-socket/tree/master?utm_source=csdn_github_accelerator&isLogin=1
+
+
+因TCP涉及粘包问题，HPSocket架构提供了三种模型
+
+PUSH：收到数据立马触发OnReceive，由开发人员自己实现拆包和缓冲区的管理逻辑。
+PULL：收到数据立马触发OnReceive，但需要开发人员维护数据包的长度（数据缓冲区管理HP内部做了），当拼接一个完整的Pack之后，Fetch获取完整的数据包就OK了。
+PACK：收到数据并且拼成一个完整的Pack之后触发OnReceive，OnReceive的数据就是一个完整的包。开发人员不必关系拼包的过程
