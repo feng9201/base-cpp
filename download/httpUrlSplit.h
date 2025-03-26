@@ -14,7 +14,7 @@ namespace download {
         * @param port {unsigned short*} 存储端口号大小
         * @return {bool} 是否成功获得
         */
-        static bool get_addr(const char* url, char* domain, char* url_path,size_t size,
+        static bool get_addr(const char* url, char* domain, char* url_path,int size,
             unsigned short* port);
         /**
          * 从完整的 url 中获得 WEB 服务器地址，格式：domain:port
@@ -23,7 +23,7 @@ namespace download {
          * @param size {size_t} out 缓冲区大小
          * @return {bool} 是否成功获得
          */
-        static bool get_addr(const char* url, char* addr, size_t size);
+        //static bool get_addr(const char* url, char* addr, int size);
 
     };
 }

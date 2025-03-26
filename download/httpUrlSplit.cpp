@@ -1,6 +1,6 @@
 ﻿#include "httpUrlSplit.h"
 #include <iostream>
-#include <string>
+#include <string.h>
 
 
 namespace download {
@@ -9,7 +9,7 @@ namespace download {
     #define	HTTP_PREFIX	"http://"
     #define	HTTPS_PREFIX	"https://"
 
-    bool httpUrlSplit::get_addr(const char* url, char* domain,char* url_path, size_t size,
+    bool httpUrlSplit::get_addr(const char* url, char* domain,char* url_path, int size,
         unsigned short* pport)
     {
         const char* ptr;
@@ -31,7 +31,7 @@ namespace download {
             return false;
         }
 
-        char buf[256];
+        char buf[512] = {0};
         strncpy(buf, ptr, sizeof(buf));
 
         char* slash = strchr(buf, '/');
@@ -57,19 +57,7 @@ namespace download {
         if (pport) {
             *pport = port;
         }
-        strncpy(domain, buf, size);
-        return true;
-    }
-
-    bool httpUrlSplit::get_addr(const char* url, char* addr, size_t size)
-    {
-        char  buf[256];
-        unsigned short port;
-
-        /*if (!get_addr(url, buf, sizeof(buf), &port)) {
-            return false;
-        }
-        snprintf(addr, size, "%s:%d", buf, port);*/
+        strncpy(domain, buf, 256);
         return true;
     }
 }
